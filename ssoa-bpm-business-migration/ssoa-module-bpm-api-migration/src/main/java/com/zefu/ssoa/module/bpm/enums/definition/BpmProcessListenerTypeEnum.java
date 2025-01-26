@@ -10,7 +10,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum BpmProcessListenerType {
+public enum BpmProcessListenerTypeEnum {
 
     EXECUTION("execution", "执行监听器"),
     TASK("task", "任务执行器");

@@ -3,10 +3,10 @@
 FROM eclipse-temurin:21-jre
 
 ## 创建目录，并使用它作为工作目录
-RUN mkdir -p /ssoa-bpm-business-migration-biz-migration
-WORKDIR /ssoa-bpm-business-migration-biz-migration
+RUN mkdir -p /ssoa-module-bpm-biz-migration
+WORKDIR /ssoa-module-bpm-biz-migration
 ## 将后端项目的 Jar 文件，复制到镜像中
-COPY ./target/ssoa-bpm-business-migration-biz-migration.jar app.jar
+COPY ./target/ssoa-module-bpm-biz-migration.jar app.jar
 
 ## 设置 TZ 时区
 ## 设置 JAVA_OPTS 环境变量，可通过 docker run -e "JAVA_OPTS=" 进行覆盖

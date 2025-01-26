@@ -7,8 +7,6 @@ import com.zefu.ssoa.module.bpm.controller.admin.task.vo.instance.BpmProcessInst
 import com.zefu.ssoa.module.bpm.dal.dataobject.task.BpmProcessInstanceCopyDO;
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.List;
-
 @Mapper
 public interface BpmProcessInstanceCopyMapper extends BaseMapperX<BpmProcessInstanceCopyDO> {
 
@@ -20,9 +18,8 @@ public interface BpmProcessInstanceCopyMapper extends BaseMapperX<BpmProcessInst
                 .orderByDesc(BpmProcessInstanceCopyDO::getId));
     }
 
-    default List<BpmProcessInstanceCopyDO> selectListByProcessInstanceIdAndActivityId(String processInstanceId, String activityId) {
-        return selectList(BpmProcessInstanceCopyDO::getProcessInstanceId, processInstanceId,
-                BpmProcessInstanceCopyDO::getActivityId, activityId);
+    default void deleteByProcessInstanceId(String processInstanceId) {
+        delete(BpmProcessInstanceCopyDO::getProcessInstanceId, processInstanceId);
     }
 
 }

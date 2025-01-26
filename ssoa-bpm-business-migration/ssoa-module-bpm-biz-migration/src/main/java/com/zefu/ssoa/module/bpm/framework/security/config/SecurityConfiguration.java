@@ -1,6 +1,7 @@
 package com.zefu.ssoa.module.bpm.framework.security.config;
 
 import com.zefu.ssoa.framework.security.config.AuthorizeRequestsCustomizer;
+import com.zefu.ssoa.module.bpm.enums.ApiConstants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,6 +30,8 @@ public class SecurityConfiguration {
                 // Spring Boot Actuator 的安全配置
                 registry.requestMatchers("/actuator").permitAll()
                         .requestMatchers("/actuator/**").permitAll();
+                // RPC 服务的安全配置
+                registry.requestMatchers(ApiConstants.PREFIX + "/**").permitAll();
             }
 
         };

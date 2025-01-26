@@ -3,6 +3,8 @@ package com.zefu.ssoa.module.bpm.dal.dataobject.definition;
 import com.zefu.ssoa.framework.mybatis.core.dataobject.BaseDO;
 import com.zefu.ssoa.framework.mybatis.core.type.LongListTypeHandler;
 import com.zefu.ssoa.framework.mybatis.core.type.StringListTypeHandler;
+import com.zefu.ssoa.module.bpm.controller.admin.definition.vo.model.BpmModelMetaInfoVO;
+import com.zefu.ssoa.module.bpm.enums.definition.BpmAutoApproveTypeEnum;
 import com.zefu.ssoa.module.bpm.enums.definition.BpmModelFormTypeEnum;
 import com.zefu.ssoa.module.bpm.enums.definition.BpmModelTypeEnum;
 import com.zefu.ssoa.module.system.api.user.dto.AdminUserRespDTO;
@@ -149,5 +151,35 @@ public class BpmProcessDefinitionInfoDO extends BaseDO {
      */
     @TableField(typeHandler = StringListTypeHandler.class) // 为了可以使用 find_in_set 进行过滤
     private List<Long> managerUserIds;
+
+    /**
+     * 是否允许撤销审批中的申请
+     */
+    private Boolean allowCancelRunningProcess;
+
+    /**
+     * 流程 ID 规则
+     */
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private BpmModelMetaInfoVO.ProcessIdRule processIdRule;
+
+    /**
+     * 自动去重类型
+     *
+     * 枚举 {@link BpmAutoApproveTypeEnum}
+     */
+    private Integer autoApprovalType;
+
+    /**
+     * 标题设置
+     */
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private BpmModelMetaInfoVO.TitleSetting titleSetting;
+
+    /**
+     * 摘要设置
+     */
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private BpmModelMetaInfoVO.SummarySetting summarySetting;
 
 }

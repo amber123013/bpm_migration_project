@@ -10,7 +10,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum BpmProcessListenerValueType {
+public enum BpmProcessListenerValueTypeEnum {
 
     CLASS("class", "Java 类"),
     DELEGATE_EXPRESSION("delegateExpression", "代理表达式"),
