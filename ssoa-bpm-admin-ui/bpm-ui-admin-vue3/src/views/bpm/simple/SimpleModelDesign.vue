@@ -1,11 +1,11 @@
 <template>
   <ContentWrap :bodyStyle="{ padding: '20px 16px' }">
     <SimpleProcessDesigner
-      :model-id="modelId"
-      :model-key="modelKey"
-      :model-name="modelName"
-      @success="handleSuccess"
+      :model-form-id="modelFormId"
+      :model-form-type="modelFormType"
       :start-user-ids="startUserIds"
+      :start-dept-ids="startDeptIds"
+      @success="handleSuccess"
       ref="designerRef"
     />
   </ContentWrap>
@@ -18,10 +18,11 @@ defineOptions({
 })
 
 defineProps<{
-  modelId?: string
-  modelKey?: string
   modelName?: string
+  modelFormId?: number
+  modelFormType?: number
   startUserIds?: number[]
+  startDeptIds?: number[]
 }>()
 
 const emit = defineEmits(['success'])

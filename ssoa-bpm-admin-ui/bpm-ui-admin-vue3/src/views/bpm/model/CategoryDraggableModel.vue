@@ -97,9 +97,22 @@
         </el-table-column>
         <el-table-column label="可见范围" prop="startUserIds" min-width="150">
           <template #default="{ row }">
-            <el-text v-if="!row.startUsers?.length"> 全部可见 </el-text>
+            <el-text v-if="!row.startUsers?.length && !row.startDepts?.length"> 全部可见 </el-text>
             <el-text v-else-if="row.startUsers.length === 1">
               {{ row.startUsers[0].nickname }}
+            </el-text>
+            <el-text v-else-if="row.startDepts?.length === 1">
+              {{ row.startDepts[0].name }}
+            </el-text>
+            <el-text v-else-if="row.startDepts?.length > 1">
+              <el-tooltip
+                class="box-item"
+                effect="dark"
+                placement="top"
+                :content="row.startDepts.map((dept: any) => dept.name).join('、')"
+              >
+                {{ row.startDepts[0].name }}等 {{ row.startDepts.length }} 个部门可见
+              </el-tooltip>
             </el-text>
             <el-text v-else>
               <el-tooltip
@@ -436,7 +449,6 @@ const handleChangeState = async (row: any) => {
   try {
     // 修改状态的二次确认
     const id = row.id
-    debugger
     const statusState = state === 1 ? '停用' : '启用'
     const content = '是否确认' + statusState + '流程名字为"' + row.name + '"的数据项?'
     await message.confirm(content)
@@ -498,10 +510,15 @@ const isManagerUser = (row: any) => {
 
 /** 处理模型的排序 **/
 const handleModelSort = () => {
-  // 保存初始数据
-  originalData.value = cloneDeep(props.categoryInfo.modelList)
-  isModelSorting.value = true
-  initSort()
+  if (isModelSorting.value) {
+    // 如果已经在排序状态，则取消排序
+    handleModelSortCancel()
+  } else {
+    // 保存初始数据
+    originalData.value = cloneDeep(props.categoryInfo.modelList)
+    isModelSorting.value = true
+    initSort()
+  }
 }
 
 /** 处理模型的排序提交 */

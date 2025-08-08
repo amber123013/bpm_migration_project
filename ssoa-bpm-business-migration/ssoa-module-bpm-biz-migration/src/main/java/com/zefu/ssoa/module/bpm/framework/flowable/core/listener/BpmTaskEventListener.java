@@ -3,10 +3,12 @@ package com.zefu.ssoa.module.bpm.framework.flowable.core.listener;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONObject;
 import com.zefu.ssoa.framework.common.util.number.NumberUtils;
 import com.zefu.ssoa.module.bpm.enums.definition.BpmBoundaryEventTypeEnum;
 import com.zefu.ssoa.module.bpm.framework.flowable.core.enums.BpmnModelConstants;
 import com.zefu.ssoa.module.bpm.framework.flowable.core.util.BpmnModelUtils;
+import com.zefu.ssoa.module.bpm.framework.flowable.core.util.FlowableUtils;
 import com.zefu.ssoa.module.bpm.service.definition.BpmModelService;
 import com.zefu.ssoa.module.bpm.service.task.BpmTaskService;
 import com.google.common.collect.ImmutableSet;
@@ -47,7 +49,7 @@ public class BpmTaskEventListener extends AbstractFlowableEngineEventListener {
     public static final Set<FlowableEngineEventType> TASK_EVENTS = ImmutableSet.<FlowableEngineEventType>builder()
             .add(FlowableEngineEventType.TASK_CREATED)
             .add(FlowableEngineEventType.TASK_ASSIGNED)
-//            .add(FlowableEngineEventType.TASK_COMPLETED) // 由于审批通过时，已经记录了 task 的 status 为通过，所以不需要监听了。
+            .add(FlowableEngineEventType.TASK_COMPLETED) // 由于审批通过时，已经记录了 task 的 status 为通过，这里仅处理任务后置通知。
             .add(FlowableEngineEventType.ACTIVITY_CANCELLED)
             .add(FlowableEngineEventType.TIMER_FIRED) // 监听审批超时
             .build();
@@ -58,12 +60,20 @@ public class BpmTaskEventListener extends AbstractFlowableEngineEventListener {
 
     @Override
     protected void taskCreated(FlowableEngineEntityEvent event) {
-        taskService.processTaskCreated((Task) event.getEntity());
+        Task entity = (Task) event.getEntity();
+        FlowableUtils.execute(entity.getTenantId(), () -> taskService.processTaskCreated(entity));
     }
 
     @Override
     protected void taskAssigned(FlowableEngineEntityEvent event) {
-        taskService.processTaskAssigned((Task) event.getEntity());
+        Task entity = (Task) event.getEntity();
+        FlowableUtils.execute(entity.getTenantId(), () -> taskService.processTaskAssigned(entity));
+    }
+
+    @Override
+    protected void taskCompleted(FlowableEngineEntityEvent event) {
+        Task entity = (Task) event.getEntity();
+        FlowableUtils.execute(entity.getTenantId(), () -> taskService.processTaskCompleted(entity));
     }
 
     @Override
@@ -89,6 +99,23 @@ public class BpmTaskEventListener extends AbstractFlowableEngineEventListener {
         String processDefinitionId = event.getProcessDefinitionId();
         BpmnModel bpmnModel = modelService.getBpmnModelByDefinitionId(processDefinitionId);
         Job entity = (Job) event.getEntity();
+        // 特殊 from https://t.zsxq.com/h6oWr ：当 elementId 为空时，尝试从 JobHandlerConfiguration 中解析 JSON 获取
+        String elementId = entity.getElementId();
+        if (elementId == null && entity.getJobHandlerConfiguration() != null) {
+            try {
+                String handlerConfig = entity.getJobHandlerConfiguration();
+                if (handlerConfig.startsWith("{") && handlerConfig.contains("activityId")) {
+                    elementId = new JSONObject(handlerConfig).getStr("activityId");
+                }
+            } catch (Exception e) {
+                log.error("[timerFired][解析 entity({}) 失败]", entity, e);
+                return;
+            }
+        }
+        if (elementId == null) {
+            log.error("[timerFired][解析 entity({}) elementId 为空，跳过处理]", entity);
+            return;
+        }
         FlowElement element = BpmnModelUtils.getFlowElementById(bpmnModel, entity.getElementId());
         if (!(element instanceof BoundaryEvent)) {
             return;

@@ -17,7 +17,7 @@ import com.zefu.ssoa.module.bpm.controller.admin.task.vo.task.BpmTaskRespVO;
 import com.zefu.ssoa.module.bpm.convert.definition.BpmProcessDefinitionConvert;
 import com.zefu.ssoa.module.bpm.dal.dataobject.definition.BpmCategoryDO;
 import com.zefu.ssoa.module.bpm.dal.dataobject.definition.BpmProcessDefinitionInfoDO;
-import com.zefu.ssoa.module.bpm.event.BpmProcessInstanceStatusEvent;
+import com.zefu.ssoa.module.bpm.api.event.BpmProcessInstanceStatusEvent;
 import com.zefu.ssoa.module.bpm.framework.flowable.core.util.BpmnModelUtils;
 import com.zefu.ssoa.module.bpm.framework.flowable.core.util.FlowableUtils;
 import com.zefu.ssoa.module.bpm.service.message.dto.BpmMessageSendWhenProcessInstanceApproveReqDTO;

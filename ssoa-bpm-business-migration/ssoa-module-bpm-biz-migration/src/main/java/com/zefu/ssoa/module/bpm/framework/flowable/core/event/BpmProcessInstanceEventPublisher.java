@@ -1,6 +1,6 @@
 package com.zefu.ssoa.module.bpm.framework.flowable.core.event;
 
-import com.zefu.ssoa.module.bpm.event.BpmProcessInstanceStatusEvent;
+import com.zefu.ssoa.module.bpm.api.event.BpmProcessInstanceStatusEvent;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;

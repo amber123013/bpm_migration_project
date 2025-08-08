@@ -62,6 +62,7 @@
             v-model="formData"
             :categoryList="categoryList"
             :userList="userList"
+            :deptList="deptList"
             ref="basicInfoRef"
           />
         </div>
@@ -76,7 +77,10 @@
 
         <!-- 第四步：更多设置 -->
         <div v-show="currentStep === 3" class="mx-auto w-700px">
-          <ExtraSettings v-model="formData" ref="extraSettingsRef" />
+          <ExtraSettings
+            ref="extraSettingsRef"   
+            v-model="formData" 
+            :model-form-id="formData.formId"/>
         </div>
       </div>
     </div>
@@ -92,6 +96,7 @@ import * as ModelApi from '@/api/bpm/model'
 import * as FormApi from '@/api/bpm/form'
 import { CategoryApi, CategoryVO } from '@/api/bpm/category'
 import * as UserApi from '@/api/system/user'
+import * as DeptApi from '@/api/system/dept'
 import * as DefinitionApi from '@/api/bpm/definition'
 import { BpmModelFormType, BpmModelType, BpmAutoApproveType } from '@/utils/constants'
 import BasicInfo from './BasicInfo.vue'
@@ -153,6 +158,7 @@ const formData: any = ref({
   visible: true,
   startUserType: undefined,
   startUserIds: [],
+  startDeptIds: [],
   managerUserIds: [],
   allowCancelRunningProcess: true,
   processIdRule: {
@@ -183,6 +189,7 @@ provide('modelData', formData)
 const formList = ref([])
 const categoryList = ref<CategoryVO[]>([])
 const userList = ref<UserApi.UserVO[]>([])
+const deptList = ref<DeptApi.DeptVO[]>([])
 
 /** 初始化数据 */
 const actionType = route.params.type as string
@@ -200,15 +207,28 @@ const initData = async () => {
       data.simpleModel = JSON.parse(data.simpleModel)
     }
     formData.value = data
-    formData.value.startUserType = formData.value.startUserIds?.length > 0 ? 1 : 0
+    formData.value.startUserType =
+      formData.value.startUserIds?.length > 0 ? 1 : formData.value?.startDeptIds?.length > 0 ? 2 : 0
   } else if (['update', 'copy'].includes(actionType)) {
     // 情况二：修改场景/复制场景
     const modelId = route.params.id as string
     formData.value = await ModelApi.getModel(modelId)
-    formData.value.startUserType = formData.value.startUserIds?.length > 0 ? 1 : 0
+    formData.value.startUserType =
+      formData.value.startUserIds?.length > 0 ? 1 : formData.value?.startDeptIds?.length > 0 ? 2 : 0
+
     // 特殊：复制场景
-    if (actionType === 'copy') {
+    if (route.params.type === 'copy') {
       delete formData.value.id
+      if (formData.value.bpmnXml) {
+        formData.value.bpmnXml = formData.value.bpmnXml.replaceAll(
+          formData.value.name,
+          formData.value.name + '副本'
+        )
+        formData.value.bpmnXml = formData.value.bpmnXml.replaceAll(
+          formData.value.key,
+          formData.value.key + '_copy'
+        )
+      }
       formData.value.name += '副本'
       formData.value.key += '_copy'
       tagsView.setTitle('复制流程')
@@ -225,6 +245,8 @@ const initData = async () => {
   categoryList.value = await CategoryApi.getCategorySimpleList()
   // 获取用户列表
   userList.value = await UserApi.getSimpleUserList()
+  // 获取部门列表
+  deptList.value = await DeptApi.getSimpleDeptList()
 
   // 最终，设置 currentStep 切换到第一步
   currentStep.value = 0

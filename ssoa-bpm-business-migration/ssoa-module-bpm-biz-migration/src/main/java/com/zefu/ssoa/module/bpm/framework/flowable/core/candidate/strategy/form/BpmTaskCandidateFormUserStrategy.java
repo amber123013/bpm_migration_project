@@ -1,7 +1,7 @@
 package com.zefu.ssoa.module.bpm.framework.flowable.core.candidate.strategy.form;
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
+import com.zefu.ssoa.framework.common.util.collection.CollectionUtils;
 import com.zefu.ssoa.module.bpm.framework.flowable.core.candidate.BpmTaskCandidateStrategy;
 import com.zefu.ssoa.module.bpm.framework.flowable.core.candidate.strategy.user.BpmTaskCandidateUserStrategy;
 import com.zefu.ssoa.module.bpm.framework.flowable.core.enums.BpmTaskCandidateStrategyEnum;
@@ -33,7 +33,7 @@ public class BpmTaskCandidateFormUserStrategy implements BpmTaskCandidateStrateg
     @Override
     public Set<Long> calculateUsersByTask(DelegateExecution execution, String param) {
         Object result = execution.getVariable(param);
-        return Convert.toSet(Long.class, result);
+        return CollectionUtils.toLinkedHashSet(Long.class, result);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class BpmTaskCandidateFormUserStrategy implements BpmTaskCandidateStrateg
                                               String param, Long startUserId, String processDefinitionId,
                                               Map<String, Object> processVariables) {
         Object result = processVariables == null ? null : processVariables.get(param);
-        return Convert.toSet(Long.class, result);
+        return CollectionUtils.toLinkedHashSet(Long.class, result);
     }
 
 }

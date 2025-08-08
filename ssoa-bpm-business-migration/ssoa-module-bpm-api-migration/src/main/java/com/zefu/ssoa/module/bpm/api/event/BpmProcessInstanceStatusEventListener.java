@@ -1,4 +1,4 @@
-package com.zefu.ssoa.module.bpm.event;
+package com.zefu.ssoa.module.bpm.api.event;
 
 import cn.hutool.core.util.StrUtil;
 import org.springframework.context.ApplicationListener;

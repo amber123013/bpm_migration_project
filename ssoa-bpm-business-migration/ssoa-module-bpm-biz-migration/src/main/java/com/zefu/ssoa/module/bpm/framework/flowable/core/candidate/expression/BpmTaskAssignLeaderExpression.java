@@ -6,12 +6,12 @@ import com.zefu.ssoa.module.system.api.dept.DeptApi;
 import com.zefu.ssoa.module.system.api.dept.dto.DeptRespDTO;
 import com.zefu.ssoa.module.system.api.user.AdminUserApi;
 import com.zefu.ssoa.module.system.api.user.dto.AdminUserRespDTO;
-import jakarta.annotation.Resource;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import jakarta.annotation.Resource;
 import java.util.Set;
 
 import static com.zefu.ssoa.framework.common.util.collection.SetUtils.asSet;
@@ -24,6 +24,7 @@ import static java.util.Collections.emptySet;
  * @author 芋道源码
  */
 @Component
+@Deprecated // 仅仅是表达式的示例，建议使用 BpmTaskCandidateStartUserDeptLeaderStrategy 替代
 public class BpmTaskAssignLeaderExpression {
 
     @Resource

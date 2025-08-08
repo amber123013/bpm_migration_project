@@ -1,7 +1,7 @@
 package com.zefu.ssoa.module.bpm.service.oa.listener;
 
-import com.zefu.ssoa.module.bpm.event.BpmProcessInstanceStatusEvent;
-import com.zefu.ssoa.module.bpm.event.BpmProcessInstanceStatusEventListener;
+import com.zefu.ssoa.module.bpm.api.event.BpmProcessInstanceStatusEvent;
+import com.zefu.ssoa.module.bpm.api.event.BpmProcessInstanceStatusEventListener;
 import com.zefu.ssoa.module.bpm.service.oa.BpmOALeaveService;
 import com.zefu.ssoa.module.bpm.service.oa.BpmOALeaveServiceImpl;
 import jakarta.annotation.Resource;

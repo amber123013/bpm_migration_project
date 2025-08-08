@@ -71,6 +71,9 @@ public class BpmSimpleModelNodeVO {
     @Schema(description = "是否填写审批意见", example = "false")
     private Boolean reasonRequire;
 
+    @Schema(description = "跳过表达式", example = "{true}")
+    private String skipExpression;  // 用于审批节点
+
     /**
      * 审批节点拒绝处理
      */
@@ -112,7 +115,7 @@ public class BpmSimpleModelNodeVO {
     /**
      * 条件节点设置
      */
-    private ConditionSetting conditionSetting; // 仅用于条件节点 BpmSimpleModelNodeType.CONDITION_NODE
+    private ConditionSetting conditionSetting; // 仅用于条件节点 BpmSimpleModelNodeTypeEnum.CONDITION_NODE
 
     @Schema(description = "路由分支组", example = "[]")
     private List<RouterSetting> routerGroups;
@@ -241,7 +244,7 @@ public class BpmSimpleModelNodeVO {
     @Schema(description = "条件设置")
     @Data
     @Valid
-    // 仅用于条件节点 BpmSimpleModelNodeType.CONDITION_NODE
+    // 仅用于条件节点 BpmSimpleModelNodeTypeEnum.CONDITION_NODE
     public static class ConditionSetting {
 
         @Schema(description = "条件类型", example = "1")

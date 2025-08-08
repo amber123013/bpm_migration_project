@@ -1,5 +1,6 @@
 package com.zefu.ssoa.module.bpm.controller.admin.definition.vo.model;
 
+import com.zefu.ssoa.module.bpm.controller.admin.base.dept.DeptSimpleBaseVO;
 import com.zefu.ssoa.module.bpm.controller.admin.base.user.UserSimpleBaseVO;
 import com.zefu.ssoa.module.bpm.controller.admin.definition.vo.model.simple.BpmSimpleModelNodeVO;
 import com.zefu.ssoa.module.bpm.controller.admin.definition.vo.process.BpmProcessDefinitionRespVO;
@@ -38,6 +39,9 @@ public class BpmModelRespVO extends BpmModelMetaInfoVO {
 
     @Schema(description = "可发起的用户数组")
     private List<UserSimpleBaseVO> startUsers;
+
+    @Schema(description = "可发起的部门数组")
+    private List<DeptSimpleBaseVO> startDepts;
 
     @Schema(description = "BPMN XML")
     private String bpmnXml;

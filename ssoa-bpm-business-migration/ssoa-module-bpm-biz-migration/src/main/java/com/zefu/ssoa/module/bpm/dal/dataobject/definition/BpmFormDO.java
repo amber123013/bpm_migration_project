@@ -44,8 +44,12 @@ public class BpmFormDO extends BaseDO {
      * 表单的配置
      */
     private String conf;
-
-
+    /**
+     * 表单项的数组
+     *
+     * 目前直接将 https://github.com/JakHuang/form-generator 生成的 JSON 串，直接保存
+     * 定义：https://github.com/JakHuang/form-generator/issues/46
+     */
     @TableField(typeHandler = JacksonTypeHandler.class)
     private List<String> fields;
     /**

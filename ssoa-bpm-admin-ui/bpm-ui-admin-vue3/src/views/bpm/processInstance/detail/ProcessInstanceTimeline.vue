@@ -28,7 +28,9 @@
       <div class="flex flex-col items-start gap2" :id="`activity-task-${activity.id}-${index}`">
         <!-- 第一行：节点名称、时间 -->
         <div class="flex w-full">
-          <div class="font-bold"> {{ activity.name }}</div>
+          <div class="font-bold">
+            {{ activity.name }} <span v-if="activity.status === TaskStatusEnum.SKIP">【跳过】</span>
+          </div>
           <!-- 信息：时间 -->
           <div
             v-if="activity.status !== TaskStatusEnum.NOT_START"
@@ -36,6 +38,17 @@
           >
             {{ getApprovalNodeTime(activity) }}
           </div>
+        </div>
+        <div v-if="activity.nodeType === NodeType.CHILD_PROCESS_NODE">
+          <el-button
+            type="primary"
+            plain
+            size="small"
+            @click="handleChildProcess(activity)"
+            :disabled="!activity.processInstanceId"
+          >
+            查看子流程
+          </el-button>
         </div>
         <!-- 需要自定义选择审批人 -->
         <div
@@ -174,7 +187,7 @@ import * as ProcessInstanceApi from '@/api/bpm/processInstance'
 import { TaskStatusEnum } from '@/api/bpm/task'
 import { NodeType, CandidateStrategy } from '@/components/SimpleProcessDesignerV2/src/consts'
 import { isEmpty } from '@/utils/is'
-import { Check, Close, Loading, Clock, Minus, Delete } from '@element-plus/icons-vue'
+import { Check, Close, Loading, Clock, Minus, Delete, ArrowDown } from '@element-plus/icons-vue'
 import starterSvg from '@/assets/svgs/bpm/starter.svg'
 import auditorSvg from '@/assets/svgs/bpm/auditor.svg'
 import copySvg from '@/assets/svgs/bpm/copy.svg'
@@ -194,9 +207,12 @@ withDefaults(
     showStatusIcon: true // 默认值为 true
   }
 )
+const { push } = useRouter() // 路由
 
 // 审批节点
 const statusIconMap2 = {
+  // 跳过
+  '-2': { color: '#cccccc', icon: 'ep:arrow-down' },
   // 未开始
   '-1': { color: '#909398', icon: 'ep-clock' },
   // 待审批
@@ -218,6 +234,8 @@ const statusIconMap2 = {
 }
 
 const statusIconMap = {
+  // 跳过
+  '-2': { color: '#909398', icon: ArrowDown },
   // 审批未开始
   '-1': { color: '#909398', icon: Clock },
   '0': { color: '#00b32a', icon: Clock },
@@ -309,5 +327,18 @@ const customApproveUsers: any = ref({}) // key：activityId，value：用户列�
 const handleUserSelectConfirm = (activityId: string, userList: any[]) => {
   customApproveUsers.value[activityId] = userList || []
   emit('selectUserConfirm', activityId, userList)
+}
+
+/** 跳转子流程 */
+const handleChildProcess = (activity: any) => {
+  if (!activity.processInstanceId) {
+    return
+  }
+  push({
+    name: 'BpmProcessInstanceDetail',
+    query: {
+      id: activity.processInstanceId
+    }
+  })
 }
 </script>
