@@ -221,6 +221,7 @@ declare module 'vue' {
     UserTaskNode: typeof import('./../components/SimpleProcessDesignerV2/src/nodes/UserTaskNode.vue')['default']
     UserTaskNodeConfig: typeof import('./../components/SimpleProcessDesignerV2/src/nodes-config/UserTaskNodeConfig.vue')['default']
     Verify: typeof import('./../components/Verifition/src/Verify.vue')['default']
+    VerifyPictureWord: typeof import('./../components/Verifition/src/Verify/VerifyPictureWord.vue')['default']
     VerifyPoints: typeof import('./../components/Verifition/src/Verify/VerifyPoints.vue')['default']
     VerifySlide: typeof import('./../components/Verifition/src/Verify/VerifySlide.vue')['default']
     VerticalButtonGroup: typeof import('./../components/VerticalButtonGroup/index.vue')['default']
